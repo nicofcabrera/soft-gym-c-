@@ -14,7 +14,13 @@ void eliminarSocio(ifstream &socioEliminar);
 void ingresoSocio(ifstream &socioIngreso);
 void color(int numero);
 bool verificar(int dni);
-
+void controlStock();
+void altaStock(ofstream &stock);
+void bajaStock(ifstream &bstock);
+void modificacionStock(ifstream &mstock);
+void verStock(ifstream &vstock);
+int menuStock();
+bool verificarStock(int codigo);
 bool cinValidar();
 
 struct Socio{
@@ -26,6 +32,13 @@ struct Socio{
 	int NroDomicilio;
 	string TipoSocio;
 }s1,s2;
+
+
+struct Articulo{
+	string nombre;
+	int codigo;
+	int cantidad;
+}a1,a2;
 
 void registrarSocio(ofstream &socioAgregar){
 	system("cls"); //limpieza de consola
@@ -568,6 +581,411 @@ void ingresoSocio(ifstream &socioIngreso){
 		system("pause");
 	}
 }
+
+// ################## CONTROL STOCK ##############
+
+/*
+-> Funcion Control Stock
+	> Alta stock
+	> Baja Stock
+	> Modificacion Stock
+	> Ver Stock Total
+	> Salir
+
+*/
+
+void controlStock() {
+	int opcion;
+	ofstream Escritura;
+	ifstream Lectura;
+	
+	do{
+		system("color 60");
+		opcion = menuStock();
+		
+		switch(opcion){
+			case 1:
+				altaStock(Escritura);
+			break;
+			case 2:
+				bajaStock(Lectura);
+			break;
+			case 3:
+				modificacionStock(Lectura);
+			break;
+			case 4:
+				verStock(Lectura);
+			break;
+			case 5:
+				cout<<"\n\tSaliendo de Modulo Stock..."<<endl;
+				cout<<"\t";
+				system("pause");
+			break;
+			default:
+				cout<<"\n\tEl numero ingresado no coincide con niguno del Menu."<<endl;
+				cout<<"\t";
+				system("pause");
+			break;
+		}
+		
+		
+	}while(opcion != 5);
+
+}
+
+void altaStock(ofstream &stock){
+	system("cls"); //limpieza de consola
+	bool bandera = true;
+	int contador = 0;
+	
+	stock.open("Stock.txt", ios::out | ios::app);
+	
+	while(bandera){
+		altaStockBanner();
+		fflush(stdin);
+		
+		cout<<"\n\tCodigo: ";
+		cin>>a1.codigo;
+		cout<<"\tNombre: ";
+		fflush(stdin);
+		getline(cin, a1.nombre);
+		cout<<"\tCantidad: ";
+		cin>>a1.cantidad;
+		
+		if(a1.codigo){
+			contador++;
+		}
+
+		if(a1.cantidad){
+			contador++;
+		} 
+		
+		if(contador != 2){
+			color(4);
+			cout<<"\n\n\tIngrese solo numeros en Codigo y Cantidad."<<endl;
+			cout<<"\n\tVuelve a intentar. ";
+			system("pause");
+			system("cls");
+			contador = 0;
+			cin.clear();
+			system("color 60");
+		} else{
+			cin.clear();
+			bandera = false;
+		}
+	}
+	
+	if(verificarStock(a1.codigo)){
+		stock<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+		color(2);
+		cout<<"\n\tAGREGADO CON EXITO!"<<endl;
+		cout<<"\n\tVolviendo al menu..."<<endl;
+		cout<<"\n\t";
+		system("pause");
+		stock.close();	
+	}else{
+		color(4);
+		cout<<"\n\tEse Codigo ya se encuentra registrado."<<endl;
+		cout<<"\n\tVolviendo al menu..."<<endl;
+		cout<<"\n\t";
+		system("pause");
+		stock.close();
+	}
+}
+
+void bajaStock(ifstream &bstock){
+	system("cls");
+	bool bandera = false;
+	int auxStock, decision;
+	
+	bstock.open("Stock.txt", ios::in);
+	ofstream auxiliar("Auxstock.txt", ios::out | ios::app);
+	
+	if(bstock.is_open()){
+		while(true){
+			system("cls");
+			bajaStockBanner();
+			fflush(stdin);
+			cout<<"\n\tIngrese Codigo: ";
+			cin>>auxStock;
+		
+			if(!cin.fail()){
+				cin.clear();
+				cin.ignore();
+				break;
+			} else{
+				color(4);
+				cout<<"\n\tError. Vuelve a ingresar Codigo Stock."<<endl;
+				cout<<"\n\t";
+				system("pause");
+				cin.clear();
+				cin.ignore();
+				system("color 60");
+			}
+			system("cls");
+		}
+		
+		bstock>>a1.codigo;
+		while(!bstock.eof()){
+			bstock>>a1.nombre;
+			bstock>>a1.cantidad;
+			
+			fflush(stdin);
+		
+			if(auxStock == a1.codigo){
+				bandera = true;
+				
+				cout<<"\n\t------------------------------"<<endl;
+				cout<<"\tCodigo: "<<a1.codigo<<endl;
+				cout<<"\tNombre: "<<a1.nombre<<endl;
+				cout<<"\tCantidad: "<<a1.cantidad<<endl;
+				cout<<"\t------------------------------"<<endl;
+				
+				
+				if(bandera){
+					cout<<"\n\t\t¿Estas seguro de eliminar completamente el Stock?"<<endl;
+					cout<<"\n\t\t1.SI\t2.NO"<<endl;
+					cout<<"\n\t\tIngrese opcion: ";
+					cin>>decision;
+					if(decision != 1 || !decision){
+						color(2);
+						cout<<"\n\tOperacion cancelada. Volviendo al menu."<<endl;
+						cout<<"\n\t";
+						auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+						cin.clear();
+						cin.ignore();
+						system("pause");
+					} else{
+						color(2);
+						cout<<"\n\tCodigo Stock ELIMINADO\n"<<endl;
+						cout<<"\tVolviendo al Menu..."<<endl;
+						cout<<"\n\t";
+						system("pause");
+					}
+				}
+			} else{
+				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+			}
+			
+			bstock>>a1.codigo;
+		}
+		
+		if(!bandera){
+			color(4);
+			cout<<"\n\tEl codigo ingresado no existe\n"<<endl;
+			cout<<"\tVolviendo al Menu. "<<endl;
+			cout<<"\n\t";
+			system("pause");
+		}
+		
+		bstock.close();
+		auxiliar.close();
+	} else{
+		color(4);
+		cout<<"\n\tError al abrir el archivo. Intente otra vez..\n"<<endl;
+		cout<<"\tVolviendo al Menu Principal..."<<endl;
+		cout<<"\n\t";
+		system("pause");
+	}
+	
+	remove("Stock.txt");
+	rename("Auxstock.txt", "Stock.txt");
+}
+
+void modificacionStock(ifstream &mstock){
+	system("cls");
+	modificarStockBanner();
+	bool bandera = false, bandera2 = true;
+	int auxCodigo, contador = 0;
+	
+	cin.ignore();
+	
+	mstock.open("Stock.txt", ios::in);
+	ofstream auxiliar("Auxstock.txt", ios::out | ios::app);
+	
+	if(mstock.is_open()){
+		while(true){
+			system("cls");
+			modificarStockBanner();
+			fflush(stdin);
+			cout<<"\n\tIngrese Codigo: ";
+			cin>>auxCodigo;
+		
+			if(!cin.fail()){
+				cin.clear();
+				cin.ignore();
+				break;
+			} else{
+				color(4);
+				cout<<"\n\tError. Vuelve a ingresar Codigo."<<endl;
+				cout<<"\n\t";
+				system("pause");
+				cin.clear();
+				cin.ignore();
+				system("color 60");
+			}
+			system("cls");
+		}
+		
+		mstock>>a1.codigo;
+		while(!mstock.eof()){
+			mstock>>a1.nombre;
+			mstock>>a1.cantidad;
+		
+			if(auxCodigo == a1.codigo){
+				bandera = true;
+				
+				while(bandera2){
+					fflush(stdin);
+					cout<<"\n\tCodigo: ";
+					cin>>a2.codigo;
+					if(a2.codigo){
+						contador++;
+					}
+					cin.ignore();
+					cout<<"\tNombre: ";
+					getline(cin, a2.nombre);
+					
+					fflush(stdin);
+					
+					cout<<"\tCantidad: ";
+					cin>>a2.cantidad;
+					
+					if(a2.cantidad){
+						contador++;
+					}
+					
+					fflush(stdin);
+					
+					if(contador != 2){
+						contador = 0;
+						color(4);
+						cout<<"\n\n\tIngrese solo numeros en Codigo y Cantidad."<<endl;
+						cout<<"\n\tVuelve a intentar. "<<endl;
+						cout<<"\n\t";
+						system("pause");
+						system("cls");
+						cin.clear();
+						system("color 60");
+						modificarStockBanner();
+					} else{
+						contador = 0;
+						bandera2= false;
+					}
+				}
+
+				auxiliar<<a2.codigo<<" "<<a2.nombre<<" "<<a2.cantidad<<endl;
+				color(2);
+				cout<<"\n\tStock MODIFICADO! "<<endl;
+				cout<<"\n\t";
+				system("pause");
+			} else{
+				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+			}
+			mstock>>a1.codigo;
+		}
+		
+		if(!bandera){
+			color(4);
+			cout<<"\n\tEl codigo ingresado no existe.\n"<<endl;
+			cout<<"\tVolviendo al Menu Principal..."<<endl;
+			cout<<"\n\t";
+			system("pause");
+		}
+	
+		
+		mstock.close();
+		auxiliar.close();
+		
+	} else{
+		color(4);
+		cout<<"\n\tError al abrir el archivo. \n"<<endl;
+		cout<<"\tVolviendo al Menu Principal..."<<endl;
+		cout<<"\n\t";
+		system("pause");
+	}
+	
+	remove("Stock.txt");
+	rename("Auxstock.txt", "Stock.txt");
+}
+
+void verStock(ifstream &vstock){
+	system("cls");
+	totalStockBanner();
+	
+	vstock.open("Stock.txt",ios::in);
+	
+	if(vstock.is_open()){
+		cout<<"\n\t"<<setw(7)<<left<<"Codigo"<<setw(20)<<left<<"Nombre"<<setw(8)<<left<<"Cantidad"<<endl;
+		
+		//Linea punteada, visualizacion tabla.
+		cout<<"\t";
+		for(int i = 0 ; i < 35 ; i++){
+			cout<<"-";
+		}		
+		cout<<"\n";
+		
+		vstock>>a1.codigo;
+		while(!vstock.eof()){
+			vstock>>a1.nombre;
+			vstock>>a1.cantidad;
+						
+			cout<<"\t"<<setw(7)<<left<<a1.codigo<<setw(20)<<left<<a1.nombre<<setw(4)<<left<<a1.cantidad<<endl;
+
+			vstock>>a1.codigo;
+		}
+	
+		vstock.close();
+		color(2);
+		cout<<"\n\t";
+		system("pause");
+	} else{
+		color(4);
+		cout<<"\n\tERROR, no existe archivo. "<<endl;
+		cout<<"\n\t";
+		system("pause");
+	}
+}
+
+bool verificarStock(int codigo){
+	ifstream verStock("Stock.txt", ios::in);
+	
+	verStock>>a2.codigo;
+	while(!verStock.eof()){
+		verStock>>a2.nombre;
+		verStock>>a2.cantidad;
+		
+		if(a2.codigo == codigo){
+			verStock.close();
+			return false;
+		}
+		
+		verStock>>a2.codigo;
+	}
+	
+	verStock.close();
+	
+	return true;
+}
+
+int menuStock(){
+	int x;
+	system("cls");
+	stockBanner();
+	
+	cout<<"\n\n\t1. Alta Stock"<<endl;
+	cout<<"\t2. Baja Stock"<<endl;
+	cout<<"\t3. Modificacion Stock"<<endl;
+	cout<<"\t4. Ver Stock Total"<<endl;
+	cout<<"\t5. Salir"<<endl;
+	cout<<"\n\n\tDigite una opcion: ";
+	cin>>x;
+	
+	return x;
+}
+
+/* ############ FIN MODULO STOCK ###############3*/
+///////////////////////////s
 
 bool verificar(int dni){
 	ifstream leerSocio("Socios.txt", ios::in);

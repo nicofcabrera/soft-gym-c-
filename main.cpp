@@ -41,18 +41,18 @@ int main(){
 				ingresoSocio(Lectura);
 			break;
 			case 7:
+				controlStock();
+			break;
+			case 8:
 				cout<<"\n\tGracias por utilizar nuestro sistema! Cerrando sistema..."<<endl;
 				Sleep(3000);
-				break;
+			break;
 			default:
 				cout<<"\n\tEl numero ingresado no coincide con niguno del Menu. Volviendo al menu..."<<endl;
 				Sleep(4000);
 		}
-		
-	}while(opcion != 7);
+	}while(opcion != 8);
 
-
-	
 	return 0;
 }
 
@@ -67,7 +67,8 @@ int menu(){
 	cout<<"\t4. Modificar Socio"<<endl;
 	cout<<"\t5. Eliminar Socio"<<endl;
 	cout<<"\t6. Ingreso Socio"<<endl;
-	cout<<"\t7. Salir"<<endl;
+	cout<<"\t7. Control Stock"<<endl;
+	cout<<"\t8. Salir"<<endl;
 	cout<<"\n\n\tDigite una opcion: ";
 	cin>>x;
 	

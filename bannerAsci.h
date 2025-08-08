@@ -3,6 +3,13 @@
 using namespace std;
 
 void banner();
+void registroBanner();
+void modificarBanner();
+void eliminarBanner();
+void buscarBanner();
+void bdBanner();
+void ingresoBanner();
+void stockBanner();
 
 void banner(){
 	cout<<"\n\t #####  ###  #####  ####### ####### #     #    #        #####  #     # #     # "<<endl;
@@ -64,3 +71,42 @@ void ingresoBanner(){
 	cout<<"\t\t\t###################################"<<endl;
 }
 
+void stockBanner(){
+	cout<<"\n\t\t\t###################################"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t##           STOCK               ##"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t###################################"<<endl;
+}
+
+void bajaStockBanner(){
+	cout<<"\n\t\t\t###################################"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t##         BAJA STOCK            ##"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t###################################"<<endl;
+}
+
+void altaStockBanner(){
+	cout<<"\n\t\t\t###################################"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t##          ALTA STOCK           ##"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t###################################"<<endl;
+}
+
+void modificarStockBanner(){
+	cout<<"\n\t\t\t###################################"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t##         MODIFICAR STOCK       ##"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t###################################"<<endl;
+}
+
+void totalStockBanner(){
+	cout<<"\n\t\t\t###################################"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t##         TOTAL STOCK           ##"<<endl;
+	cout<<"\t\t\t##                               ##"<<endl;
+	cout<<"\t\t\t###################################"<<endl;
+}
