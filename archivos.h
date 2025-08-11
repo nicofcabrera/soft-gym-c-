@@ -38,6 +38,7 @@ struct Articulo{
 	string nombre;
 	int codigo;
 	int cantidad;
+	int precio;
 }a1,a2;
 
 void registrarSocio(ofstream &socioAgregar){
@@ -617,12 +618,12 @@ void controlStock() {
 				verStock(Lectura);
 			break;
 			case 5:
-				cout<<"\n\tSaliendo de Modulo Stock..."<<endl;
+				cout<<"\n\tSaliendo de Modulo Stock...\n"<<endl;
 				cout<<"\t";
 				system("pause");
 			break;
 			default:
-				cout<<"\n\tEl numero ingresado no coincide con niguno del Menu."<<endl;
+				cout<<"\n\tEl numero ingresado no coincide con niguno del Menu.\n"<<endl;
 				cout<<"\t";
 				system("pause");
 			break;
@@ -651,6 +652,8 @@ void altaStock(ofstream &stock){
 		getline(cin, a1.nombre);
 		cout<<"\tCantidad: ";
 		cin>>a1.cantidad;
+		cout<<"\tPrecio: $";
+		cin>>a1.precio;
 		
 		if(a1.codigo){
 			contador++;
@@ -658,11 +661,15 @@ void altaStock(ofstream &stock){
 
 		if(a1.cantidad){
 			contador++;
-		} 
+		}
 		
-		if(contador != 2){
+		if(a1.precio){
+			contador++;
+		}
+		
+		if(contador != 3){
 			color(4);
-			cout<<"\n\n\tIngrese solo numeros en Codigo y Cantidad."<<endl;
+			cout<<"\n\n\tIngrese solo numeros en Codigo, Precio y Cantidad."<<endl;
 			cout<<"\n\tVuelve a intentar. ";
 			system("pause");
 			system("cls");
@@ -676,7 +683,7 @@ void altaStock(ofstream &stock){
 	}
 	
 	if(verificarStock(a1.codigo)){
-		stock<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+		stock<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<" "<<a1.precio<<endl;
 		color(2);
 		cout<<"\n\tAGREGADO CON EXITO!"<<endl;
 		cout<<"\n\tVolviendo al menu..."<<endl;
@@ -729,6 +736,7 @@ void bajaStock(ifstream &bstock){
 		while(!bstock.eof()){
 			bstock>>a1.nombre;
 			bstock>>a1.cantidad;
+			bstock>>a1.precio;
 			
 			fflush(stdin);
 		
@@ -739,6 +747,7 @@ void bajaStock(ifstream &bstock){
 				cout<<"\tCodigo: "<<a1.codigo<<endl;
 				cout<<"\tNombre: "<<a1.nombre<<endl;
 				cout<<"\tCantidad: "<<a1.cantidad<<endl;
+				cout<<"\tPrecio: $"<<a1.precio<<endl;
 				cout<<"\t------------------------------"<<endl;
 				
 				
@@ -751,7 +760,7 @@ void bajaStock(ifstream &bstock){
 						color(2);
 						cout<<"\n\tOperacion cancelada. Volviendo al menu."<<endl;
 						cout<<"\n\t";
-						auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+						auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<" "<<a1.precio<<endl;
 						cin.clear();
 						cin.ignore();
 						system("pause");
@@ -764,7 +773,7 @@ void bajaStock(ifstream &bstock){
 					}
 				}
 			} else{
-				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<" "<<a1.precio<<endl;
 			}
 			
 			bstock>>a1.codigo;
@@ -831,6 +840,7 @@ void modificacionStock(ifstream &mstock){
 		while(!mstock.eof()){
 			mstock>>a1.nombre;
 			mstock>>a1.cantidad;
+			mstock>>a1.precio;
 		
 			if(auxCodigo == a1.codigo){
 				bandera = true;
@@ -857,7 +867,14 @@ void modificacionStock(ifstream &mstock){
 					
 					fflush(stdin);
 					
-					if(contador != 2){
+					cout<<"\tPrecio: $";
+					cin>>a2.precio;
+					
+					if(a2.precio){
+						contador++;
+					}
+					
+					if(contador != 3){
 						contador = 0;
 						color(4);
 						cout<<"\n\n\tIngrese solo numeros en Codigo y Cantidad."<<endl;
@@ -874,13 +891,13 @@ void modificacionStock(ifstream &mstock){
 					}
 				}
 
-				auxiliar<<a2.codigo<<" "<<a2.nombre<<" "<<a2.cantidad<<endl;
+				auxiliar<<a2.codigo<<" "<<a2.nombre<<" "<<a2.cantidad<<" "<<a2.precio<<endl;
 				color(2);
 				cout<<"\n\tStock MODIFICADO! "<<endl;
 				cout<<"\n\t";
 				system("pause");
 			} else{
-				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<endl;
+				auxiliar<<a1.codigo<<" "<<a1.nombre<<" "<<a1.cantidad<<" "<<a2.precio<<endl;
 			}
 			mstock>>a1.codigo;
 		}
@@ -916,11 +933,11 @@ void verStock(ifstream &vstock){
 	vstock.open("Stock.txt",ios::in);
 	
 	if(vstock.is_open()){
-		cout<<"\n\t"<<setw(7)<<left<<"Codigo"<<setw(20)<<left<<"Nombre"<<setw(8)<<left<<"Cantidad"<<endl;
+		cout<<"\n\t"<<setw(8)<<left<<"Codigo"<<setw(12)<<left<<"Nombre"<<setw(10)<<left<<"Cantidad"<<setw(6)<<left<<"Precio"<<endl;
 		
 		//Linea punteada, visualizacion tabla.
 		cout<<"\t";
-		for(int i = 0 ; i < 35 ; i++){
+		for(int i = 0 ; i < 36 ; i++){
 			cout<<"-";
 		}		
 		cout<<"\n";
@@ -929,8 +946,10 @@ void verStock(ifstream &vstock){
 		while(!vstock.eof()){
 			vstock>>a1.nombre;
 			vstock>>a1.cantidad;
+			vstock>>a1.precio;
 						
-			cout<<"\t"<<setw(7)<<left<<a1.codigo<<setw(20)<<left<<a1.nombre<<setw(4)<<left<<a1.cantidad<<endl;
+			cout<<"\t"<<setw(8)<<left<<a1.codigo<<setw(12)<<left<<a1.nombre<<setw(10)<<left<<a1.cantidad
+			<<setw(1)<<left<<"$"<<setw(4)<<left<<a1.precio<<endl;
 
 			vstock>>a1.codigo;
 		}
@@ -954,6 +973,7 @@ bool verificarStock(int codigo){
 	while(!verStock.eof()){
 		verStock>>a2.nombre;
 		verStock>>a2.cantidad;
+		verStock>>a2.precio;
 		
 		if(a2.codigo == codigo){
 			verStock.close();
@@ -973,10 +993,10 @@ int menuStock(){
 	system("cls");
 	stockBanner();
 	
-	cout<<"\n\n\t1. Alta Stock"<<endl;
-	cout<<"\t2. Baja Stock"<<endl;
-	cout<<"\t3. Modificacion Stock"<<endl;
-	cout<<"\t4. Ver Stock Total"<<endl;
+	cout<<"\n\n\t1. Alta Articulo"<<endl;
+	cout<<"\t2. Baja Articulo"<<endl;
+	cout<<"\t3. Modificacion Articulo"<<endl;
+	cout<<"\t4. Ver Articulos Total"<<endl;
 	cout<<"\t5. Salir"<<endl;
 	cout<<"\n\n\tDigite una opcion: ";
 	cin>>x;

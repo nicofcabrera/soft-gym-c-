@@ -67,7 +67,7 @@ int menu(){
 	cout<<"\t4. Modificar Socio"<<endl;
 	cout<<"\t5. Eliminar Socio"<<endl;
 	cout<<"\t6. Ingreso Socio"<<endl;
-	cout<<"\t7. Control Stock"<<endl;
+	cout<<"\t7. Gestion de Articulos"<<endl;
 	cout<<"\t8. Salir"<<endl;
 	cout<<"\n\n\tDigite una opcion: ";
 	cin>>x;
